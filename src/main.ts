@@ -345,19 +345,22 @@ export default class ProjectsPlugin extends Plugin {
       }
     });
   }
-}
-/**
- * addNewProject returns the project id for the project
- *
- */
-export function addNewProject(data: Object): string {
-  data.id = uuidv4();
-  data.views.forEach(view => {
-      view.id = uuidv4();  // Setting the 'type' property to 2
-    });
-  settings.addProject(data);
-  // this.activateView(data.id);
-  return data.id
+  
+  /**
+   * addNewProject returns the project id for the project
+   *
+   */
+  addNewProject(data: Partial<ProjectDefinition>): ProjectId {
+    if (data.views && Array.isArray(data.views)) {
+      data.views.forEach(view => {
+        view.id = uuidv4();  // Setting the 'type' property to 2
+      });
+    }
+    
+    const project: ProjectDefinition = { ...createProject(), ...data }
+    settings.addProject(project);
+    return project.id;
+  }
 }
 /**
  * getShowCommandId returns the command identifier for a Show command.
