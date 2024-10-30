@@ -352,8 +352,11 @@ export default class ProjectsPlugin extends Plugin {
    */
   addNewProject(data: Partial<ProjectDefinition>): ProjectId {
     if (data.views && Array.isArray(data.views)) {
-      data.views.forEach(view => {
-        view.id = uuidv4();  // Setting the 'type' property to 2
+      data.views = data.views.map(view => {
+        if (!view.id) {
+          return { ...view, id: uuidv4() };
+        }
+        return view;
       });
     }
     
