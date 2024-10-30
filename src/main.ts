@@ -13,6 +13,7 @@ import { settings } from "src/lib/stores/settings";
 import { CreateNoteModal } from "src/ui/modals/createNoteModal";
 import { CreateProjectModal } from "src/ui/modals/createProjectModal";
 import { get, type Unsubscriber } from "svelte/store";
+import { v4 as uuidv4 } from "uuid";
 import { registerFileEvents } from "./events";
 import { ObsidianFileSystemWatcher } from "./lib/filesystem/obsidian/filesystem";
 import { ProjectsSettingTab } from "./ui/settings/settings";
@@ -345,7 +346,19 @@ export default class ProjectsPlugin extends Plugin {
     });
   }
 }
-
+/**
+ * addNewProject returns the project id for the project
+ *
+ */
+export function addNewProject(data: Object): string {
+  data.id = uuidv4();
+  data.views.forEach(view => {
+      view.id = uuidv4();  // Setting the 'type' property to 2
+    });
+  settings.addProject(data);
+  // this.activateView(data.id);
+  return data.id
+}
 /**
  * getShowCommandId returns the command identifier for a Show command.
  *
