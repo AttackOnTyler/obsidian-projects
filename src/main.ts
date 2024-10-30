@@ -350,17 +350,19 @@ export default class ProjectsPlugin extends Plugin {
    * addNewProject returns the project id for the project
    *
    */
-  addNewProject(data: Object): ProjectId {
-    if (data.views && Array.isArray(data.views)) {
-      data.views = data.views.map(view => {
-        if (!view.id) {
-          return { ...view, id: uuidv4() };
-        }
-        return view;
-      });
-    }
+  addNewProject(data: Partial<ProjectDefinition>): ProjectId {
+    const defaultProject = createProject()
+    const projectViews = [
+      ...(defaultProject.views || []),
+      ...(data.views && Array.isArray(data.views)
+        ? data.views.map(view => ({
+            ...view,
+            id: view.id ?? uuidv4(),
+          }))
+        : []),
+    ];
     
-    const project: ProjectDefinition = { ...createProject(), ...data }
+    const project: ProjectDefinition = { ...defaultProject, ...data, views: projectViews, }
     settings.addProject(project);
     return project.id;
   }
