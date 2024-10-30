@@ -350,7 +350,7 @@ export default class ProjectsPlugin extends Plugin {
    * addNewProject returns the project id for the project
    *
    */
-  addNewProject(data: Partial<ProjectDefinition>): ProjectId {
+  addNewProject(data: Object): ProjectId {
     if (data.views && Array.isArray(data.views)) {
       data.views = data.views.map(view => {
         if (!view.id) {
