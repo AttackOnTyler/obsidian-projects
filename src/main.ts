@@ -352,15 +352,12 @@ export default class ProjectsPlugin extends Plugin {
    */
   addNewProject(data: Partial<ProjectDefinition>): ProjectId {
     const defaultProject = createProject()
-    const projectViews = [
-      ...(defaultProject.views || []),
-      ...(data.views && Array.isArray(data.views)
+    const projectViews = data.views && Array.isArray(data.views)
         ? data.views.map(view => ({
             ...view,
             id: view.id ?? uuidv4(),
           }))
-        : []),
-    ];
+        : [];
     
     const project: ProjectDefinition = { ...defaultProject, ...data, views: projectViews, }
     settings.addProject(project);
